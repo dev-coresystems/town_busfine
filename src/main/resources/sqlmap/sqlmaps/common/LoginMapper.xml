@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="LoginMapper">
+    <select id="getUserInfo" parameterType="hashmap" resultType="com.busfine.home.common.vo.GbfUserDetails">
+        select
+            tu.user_id
+            , tup.user_nm
+            , tu.pwd
+            , tu.authority
+            , decode(tu.authority, 'ROLE_CP', '운수사', 'ROPE_SIGUN', '시군', 'ROLE_ADMIN', '시스템관리자') auth_nm
+            , tup.org_cd
+            , tup.comp_id
+            , tu.last_pw_update_dt
+            , case
+                when tu.last_pw_update_dt is null THEN 'Y'
+                when to_char(tu.last_pw_update_dt, 'YYYYMMDD') <![CDATA[<]]> to_char(add_months(sysdate, -3), 'YYYYMMDD') then 'Y'
+                else 'N'
+              end is_expired
+            ,  tu.fail_count
+        from tb_user tu
+        inner join tb_user_profile tup on tu.user_id = tup.user_id
+        where tu.user_id = #{userId}
+        and tu.use_yn = 'Y'
+    </select>
+
+    <select id="findFailCount" parameterType="String" resultType="int">
+        select fail_count from tb_user where user_id = #{userId}
+    </select>
+
+    <update id="updateLoginFailCountToZero" parameterType="string">
+        update tb_user set
+        fail_count = 0
+        where user_id = #{userId}
+    </update>
+
+    <update id="updateLoginFailCount" parameterType="string">
+        update tb_user set
+        fail_count = fail_count + 1
+        where user_id = #{userId}
+    </update>
+</mapper>

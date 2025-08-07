@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+
+    <Appenders>
+        <Console name="ConsoleAppender" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level [%t] %c{1} - %msg%n"/>
+        </Console>
+
+        <RollingFile name="RollingFileAppender"
+                     fileName="${sys:catalina.base}/logs/busfine.log"
+                     filePattern="${sys:catalina.base}/logs/busfine-%d{yyyy-MM-dd}.log"
+                     append="true">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5level [%t] %c{1} - %msg%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+            <DefaultRolloverStrategy max="30" />
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <!-- 불필요한 SQL 로그 OFF -->
+        <Logger name="jdbc.resultset" level="off" />
+        <Logger name="jdbc.resultsettable" level="off" />
+        <Logger name="jdbc.sqlonly" level="info" />
+        <Logger name="jdbc.sqltiming" level="off" />
+        <Logger name="jdbc.audit" level="off" />
+        <Logger name="jdbc.connection" level="off" />
+
+        <Root level="info">
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="RollingFileAppender"/>
+        </Root>
+    </Loggers>
+
+</Configuration>

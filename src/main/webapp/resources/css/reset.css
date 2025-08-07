@@ -1,0 +1,8 @@
+*					      { box-sizing: border-box; -webkit-box-sizing: border-box; padding:0px; margin:0px; -webkit-tap-highlight-color : transparent;}
+html            { font-size: 14px; }
+body            { height: 100%;font-synthesis: none;font-family: 'Nanum Gothic', sans-serif; font-size:14px; letter-spacing:-1.2px; color:#101010; word-wrap: break-word; word-break: keep-all;}
+a {color: #494949;text-decoration: none;vertical-align: top;cursor:pointer;}
+button {cursor:pointer;}
+a:hover, a:active, a:focus, a:visited {text-decoration: none;}
+*:focus {outline: none;}
+li {list-style:none;}

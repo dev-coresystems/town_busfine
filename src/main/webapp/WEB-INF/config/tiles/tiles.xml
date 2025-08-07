@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+
+    <!-- 페이지 영역 메인 템플릿 -->
+    <definition name="main-template" template="/WEB-INF/tiles/templates/main-template.jsp">
+        <put-attribute name="header" value="/WEB-INF/tiles/parts/header.jsp" />
+        <put-attribute name="lnb" value="/WEB-INF/tiles/parts/lnb.jsp" />
+    </definition>
+
+    <!-- 일반 페이지 body -->
+    <definition name="*/*.gbf" extends="main-template">
+        <put-attribute name="body" value="/WEB-INF/views/{1}/{2}.jsp" />
+    </definition>
+</tiles-definitions>

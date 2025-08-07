@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="commonMapper">
+    <select id="getMnuList" parameterType="hashmap" resultType="com.busfine.home.common.vo.MnuVo">
+        select distinct
+            level hierarchy_level
+            , tpi.pgm_id
+            , tpi.pgm_grp
+            , tpi.p_pgm_id
+            , tpi.pgm_nm
+            , tpi.depth
+            , tpi.sort
+            , tpi.link
+            , tr.search_yn
+            , tr.create_yn
+            , tr.update_yn
+            , tr.delete_yn
+            , tr.approve_yn
+        from pms.tb_program_info tpi
+        inner join pms.tb_roll tr ON tpi.pgm_id = tr.pgm_id
+        where tpi.use_yn = 'Y'
+        and tr.authority = #{authority}
+        and tr.search_yn = 'Y'
+        start with (tpi.p_pgm_id is null or trim(tpi.p_pgm_id) = '')
+        connect by prior tpi.pgm_id = tpi.p_pgm_id
+        order siblings by tpi.depth, tpi.sort
+    </select>
+</mapper>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="
+                 http://www.springframework.org/schema/security
+                 https://www.springframework.org/schema/security/spring-security.xsd
+                 http://www.springframework.org/schema/beans
+                 https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <http auto-config="true" use-expressions="true">
+        <intercept-url pattern="/login" access="permitAll()" />
+        <intercept-url pattern="/session-expired" access="permitAll()" />
+        <intercept-url pattern="/resources/**" access="permitAll()" />
+        <intercept-url pattern="/**" access="isAuthenticated()" />
+        <form-login
+            authentication-success-handler-ref="loginSuccessHandler"
+            authentication-failure-handler-ref="loginFailureHandler"
+            login-page="/login"
+            authentication-failure-url="/login"
+            username-parameter="id"
+            password-parameter="password"
+            always-use-default-target="true"
+        />
+        <logout
+            logout-url="/logout"
+            invalidate-session="true"
+            delete-cookies="JSESSIONID"
+            success-handler-ref="logoutSuccessHandler"
+        />
+        <session-management>
+            <concurrency-control
+                max-sessions="1"
+                error-if-maximum-exceeded="false"
+                expired-session-strategy-ref="customExpiredSessionStrategy"
+                session-registry-ref="sessionRegistry"/>
+        </session-management>
+
+        <!-- enable csrf protection csrfRequestMatcher를 통해 특정 url csrf사용 안함 -->
+        <csrf request-matcher-ref="csrfRequestMatcher"/>
+    </http>
+
+    <beans:bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl"/>
+    <beans:bean id="logoutSuccessHandler" class="com.busfine.home.common.handler.CustomLogoutSuccessHandler"/>
+    <beans:bean id="customExpiredSessionStrategy" class="com.busfine.home.common.handler.CustomExpiredSessionStrategy"/>
+    <beans:bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+    <beans:bean id="loginService" class="com.busfine.home.common.service.LoginService" />
+    <beans:bean id="loginDao" class="com.busfine.home.common.dao.LoginDAO" />
+    <beans:bean id="GbfAuthenticationProvider" class="com.busfine.home.common.handler.GbfAuthenticationProvider" />
+    <beans:bean id="loginSuccessHandler" class="com.busfine.home.common.handler.LoginSuccessHandler">
+        <beans:property name="defaultTargetUrl" value="/mypage/home/GBFM010100.gbf" />
+        <beans:property name="alwaysUseDefaultTargetUrl" value="true" />
+    </beans:bean>
+    <beans:bean id="loginFailureHandler" class="com.busfine.home.common.handler.LoginFailureHandler">
+        <beans:property name="defaultFailureUrl" value="/login" />
+    </beans:bean>
+    <beans:bean id="csrfRequestMatcher" class="com.busfine.home.common.handler.CsrfRequestMatcher"/>
+    <authentication-manager>
+        <authentication-provider ref="GbfAuthenticationProvider" />
+    </authentication-manager>
+
+</beans:beans>

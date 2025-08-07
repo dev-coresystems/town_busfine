@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           https://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/tx
+           https://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!-- DBCP DataSource -->
+    <bean id="dataSourceSpied" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+        <property name="url" value="jdbc:oracle:thin:@localhost:1521/ORCLPDB" />
+        <property name="username" value="pms" />
+        <property name="password" value="pms" />
+<!--        <property name="url" value="jdbc:oracle:thin:@10.55.4.10:11521:PMS_DEV" />
+        <property name="username" value="pms" />
+        <property name="password" value="pms" />-->
+        <property name="maxActive" value="30" />
+        <property name="minIdle" value="5" />
+        <property name="maxIdle" value="10" />
+        <property name="maxWait" value="30000" />
+        <property name="validationQuery" value="SELECT 1 FROM DUAL" />
+    </bean>
+
+    <!-- log4jdbc proxy DataSource -->
+    <bean id="dataSource" class="net.sf.log4jdbc.sql.jdbcapi.DataSourceSpy">
+        <constructor-arg ref="dataSourceSpied"/>
+    </bean>
+
+    <!-- SqlSessionFactory -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="configLocation" value="classpath:/config/mybatis-config.xml" />
+        <property name="mapperLocations" value="classpath*:/sqlmap/sqlmaps/**/*.xml" />
+    </bean>
+
+    <!-- SqlSession -->
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" destroy-method="clearCache">
+        <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+
+    <!-- Mapper Scanner -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.busfine.home" />
+    </bean>
+
+    <!-- Transaction Manager -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSourceSpied" />
+    </bean>
+
+    <!-- Annotation-driven Transaction -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <!-- MultipartResolver -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="104857600" />
+        <property name="maxInMemorySize" value="100000000" />
+    </bean>
+</beans>
