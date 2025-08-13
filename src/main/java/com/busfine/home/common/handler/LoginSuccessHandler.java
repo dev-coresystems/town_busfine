@@ -29,7 +29,7 @@ public class LoginSuccessHandler  extends SimpleUrlAuthenticationSuccessHandler 
 
         Map<String, Object> responseMap = new HashMap<>();
 
-        if ("ROLE_ADMIN".equals(userInfo.getAuthority())){
+        if ("ROLE_SUPER".equals(userInfo.getAuthority()) || "ROLE_ADMIN".equals(userInfo.getAuthority())){
             //임시 데이터
             List<Map<String, Object>> orgList = new ArrayList<>();
             for(int i = 0; i < 10; i++) {

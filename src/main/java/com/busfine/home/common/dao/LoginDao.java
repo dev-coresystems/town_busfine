@@ -5,11 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
-import java.util.Map;
-
 @Repository
 @RequiredArgsConstructor
-public class LoginDAO {
+public class LoginDao {
     private final SqlSession sql;
 
     public GbfUserDetails getUserInfo(String userId) {

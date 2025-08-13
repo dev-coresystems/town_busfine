@@ -29,7 +29,7 @@ public class ErrorController {
         Throwable throwable = (Throwable) request.getAttribute("javax.servlet.error.exception");
 
         String message = "알 수 없는 오류가 발생했습니다.";
-        
+
         if(throwable instanceof RequestRejectedException) {//잘못된 요청인 경우
             statusCode = HttpStatus.BAD_REQUEST.value();
         }
@@ -46,15 +46,21 @@ public class ErrorController {
 
         log.error("*********************** ERROR ***********************");
         log.error("URI: {}", errorUri);
-        log.error("EXCEPTION: {}", (throwable != null ? throwable.getMessage() : "예외 정보 없음"));
+        log.error("EXCEPTION: {}", (throwable != null ? throwable : "예외 정보 없음"));
 
         String userId = Optional.ofNullable(request.getSession().getAttribute("userId")).orElse("").toString();
+
         if( !"".equals(userId)) {
             log.error("USER_ID : {}", userId);
         }
 
-
         log.error("STATUS_CODE : {}", statusCode);
+
+        if(statusCode != null && "".equals(userId) && statusCode == 403) {
+            log.error("MESSAGE : {}", "세션만료");
+            return "/session-expired";
+        }
+
         log.error("MESSAGE : {}", message);
 
         String xhrHeader = request.getHeader("X-Requested-With");

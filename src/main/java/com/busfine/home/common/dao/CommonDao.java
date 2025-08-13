@@ -10,14 +10,14 @@ import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
-public class CommonDAO {
+public class CommonDao {
     private final SqlSession sql;
 
     public List<MnuVo> getMnuList(String auth) {
-        return sql.selectList("commonMapper.getMnuList", auth);
+        return sql.selectList("CommonMapper.getMnuList", auth);
     }
 
     public List<Map<String,Object>> getMenuList(String auth) {
-        return sql.selectList("commonMapper.getMenuList", auth);
+        return sql.selectList("CommonMapper.getMenuList", auth);
     }
 }

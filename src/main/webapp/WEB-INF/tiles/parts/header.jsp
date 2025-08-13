@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/tiles/parts/taglibs.jsp"%>
 <div class="header">
     <div class='header-top'>
-        <strong><sec:authentication property="principal.userNm" /></strong>반갑습니다.
+        <strong><sec:authentication property="principal.userNm" /></strong>
         <div class="select-org-contents">
             <select>
                 <option>경기도 수원시</option>

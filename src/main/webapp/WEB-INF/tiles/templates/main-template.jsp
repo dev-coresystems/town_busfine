@@ -9,10 +9,12 @@
 		<link rel="stylesheet" type="text/css" href="/resources/css/style.css" />
         <link rel="stylesheet" type="text/css" href="/resources/css/reset.css" />
         <link rel="stylesheet" type="text/css" href="/resources/css/bootstrap/icon.css" />
+        <script src="/resources/js/jquery/jquery-3.5.1.min.js"></script>
+        <script src="/resources/plugin/excel/xlsx.full.min-0.20.3.js"></script>
+        <script src="/resources/js/table.js"></script>
         <script src="/resources/js/menu.js"></script>
         <script src="/resources/js/common.js"></script>
-        <script src="/resources/js/jquery/jquery-3.5.1.min.js"></script>
-
+        <script src="/resources/js/util.js"></script>
 	</head>
     <body>
         <tiles:insertAttribute name="header" />

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="GBFM020101Mapper">
+    <select id="selectList" parameterType="hashmap" resultType="com.busfine.home.approve.vo.GBFM020101Vo">
+        <include refid="CommonMapper.pagePrefix" />
+        select
+            comp_id
+            , comp_nm
+            , addr
+            , owner
+            , tel
+            , corp_no
+            , biz_no
+        from tb_company
+        <include refid="CommonMapper.pagePostfix" />
+    </select>
+</mapper>

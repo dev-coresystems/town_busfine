@@ -1,9 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="commonMapper">
+<mapper namespace="CommonMapper">
+    <sql id="pagePrefix">
+        select * from (
+        <if test="isExcel != true">
+            select A.*, count(*) over() total_cnt
+            from (select * from (
+        </if>
+    </sql>
+    <sql id="pagePostfix">
+        <if test="isExcel != true">
+            )
+            <if test="orderColumn != null and orderColumn != ''">
+                order by ${orderColumn} ${orderDir}
+            </if>
+            ) A offset #{offset} rows fetch next #{limit} rows only
+        </if>
+            )
+    </sql>
+
     <select id="getMnuList" parameterType="hashmap" resultType="com.busfine.home.common.vo.MnuVo">
         select distinct
-            level hierarchy_level
+            level as hierarchy_level
             , tpi.pgm_id
             , tpi.pgm_grp
             , tpi.p_pgm_id
@@ -11,16 +29,18 @@
             , tpi.depth
             , tpi.sort
             , tpi.link
-            , tr.search_yn
-            , tr.create_yn
-            , tr.update_yn
-            , tr.delete_yn
-            , tr.approve_yn
+            , coalesce(tru.search_yn, tr.search_yn) AS search_yn
+            , coalesce(tru.create_yn, tr.create_yn) AS create_yn
+            , coalesce(tru.update_yn, tr.update_yn) AS update_yn
+            , coalesce(tru.delete_yn, tr.delete_yn) AS delete_yn
+            , coalesce(tru.approve_yn, tr.approve_yn) AS approve_yn
         from pms.tb_program_info tpi
-        inner join pms.tb_roll tr ON tpi.pgm_id = tr.pgm_id
+        left join pms.tb_roll tr
+        on tpi.pgm_id = tr.pgm_id and tr.authority = #{authority}
+        left join pms.tb_roll_user tru
+        on tpi.pgm_id = tru.pgm_id and tru.user_id = #{userId}
         where tpi.use_yn = 'Y'
-        and tr.authority = #{authority}
-        and tr.search_yn = 'Y'
+        and coalesce(tru.search_yn, tr.search_yn) = 'Y'
         start with (tpi.p_pgm_id is null or trim(tpi.p_pgm_id) = '')
         connect by prior tpi.pgm_id = tpi.p_pgm_id
         order siblings by tpi.depth, tpi.sort

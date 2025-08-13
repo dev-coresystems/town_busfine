@@ -45,7 +45,7 @@
     <beans:bean id="customExpiredSessionStrategy" class="com.busfine.home.common.handler.CustomExpiredSessionStrategy"/>
     <beans:bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
     <beans:bean id="loginService" class="com.busfine.home.common.service.LoginService" />
-    <beans:bean id="loginDao" class="com.busfine.home.common.dao.LoginDAO" />
+    <beans:bean id="loginDao" class="com.busfine.home.common.dao.LoginDao" />
     <beans:bean id="GbfAuthenticationProvider" class="com.busfine.home.common.handler.GbfAuthenticationProvider" />
     <beans:bean id="loginSuccessHandler" class="com.busfine.home.common.handler.LoginSuccessHandler">
         <beans:property name="defaultTargetUrl" value="/mypage/home/GBFM010100.gbf" />
