@@ -11,6 +11,7 @@
             , tel
             , corp_no
             , biz_no
+            , note
         from tb_company
         <include refid="CommonMapper.pagePostfix" />
     </select>

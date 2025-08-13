@@ -89,8 +89,8 @@
                         <c:set var="startNo" value="${(pagination.pageNo - 1) * pagination.pageSize}" />
                         <c:forEach var="item" items="${list}" varStatus="status">
                             <tr>
-                                <td><input class="row-select" type="checkbox"></td>
-                                <td>${startNo + status.index + 1}</td>
+                                <td class="table-check"><input class="row-select" type="checkbox"></td>
+                                <td class="table-no">${startNo + status.index + 1}</td>
                                 <td class="data-edit">${item.compNm}</td>
                                 <td class="data-edit">${item.addr}</td>
                                 <td class="data-edit">${item.owner}</td>
